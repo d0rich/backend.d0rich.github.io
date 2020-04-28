@@ -8,7 +8,7 @@ var cors = require('cors');
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
-MongoClient.connect(db.url, (err, client) => { //{ useUnifiedTopology: true },
+MongoClient.connect(db.url, {useUnifiedTopology: true, useNewUrlParser: true}, (err, client) => { 
     // console,log("Connect");
     if (err) return console.log(err)
     require('./app/routes')(app, client);

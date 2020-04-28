@@ -7,15 +7,16 @@ const db_name = "HomeTasks";
 
 module.exports = function(app, db) 
 {   
-   app.get('/get_task', async (request,response)=>{    
+   app.get('/get_subject_toms', async (request,response)=>{    
+        console.log(request.param("id"));
         try
         {
             var id = new require('mongodb').ObjectID(request.param("id"));    
             var detail = {'_id': id};
-            db.db(db_name).collection("Task").findOne(detail, (error, docs) =>
+            db.db(db_name).collection("Subjects").findOne(detail, (error, docs) =>
             {
                 if(docs == null) response.send("-1");
-                else response.send(docs);
+                else response.send(docs.toms);
             });       
         }  
         catch(error)
