@@ -7,16 +7,6 @@ import {SkillsSection} from "./skillsSection";
 import {Social} from "./social";
 import {TimeNote} from "./timeNote";
 
-const noNotesNote = new TimeNote({
-    title: new Text('Нет записей','No notes'),
-    place: new Text(),
-    period: {
-        begin: new Text('Скоро','Soon'),
-        end: new Text('Немного терпения','A little patience')
-    },
-    description: new Text('В ближайшее время тут появится запись.',
-        'The first note will appear there vey soon.') })
-
 const resumeExample = {
     photo: '',
     header: new Text(),
@@ -54,12 +44,5 @@ export class Resume{
         this.skills = resume.skills
         this.experience = resume.experience
         this.education = resume.education
-
-        if (this.experience.length === 0){
-            this.experience.push(noNotesNote)
-        }
-        if (this.education.length === 0){
-            this.education.push(noNotesNote)
-        }
     }
 }

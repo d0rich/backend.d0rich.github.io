@@ -1,22 +1,28 @@
 import  createFastify from 'fastify'
 import * as mongoose from 'mongoose'
+import fastifySwagger from "fastify-swagger"
+import { Dropbox } from 'dropbox'
 import * as config from './config'
 
+const dbx = new Dropbox({ accessToken: config.dropbox.token })
 const fastify = createFastify({
-    logger: true
+    logger: {
+        prettyPrint: true
+    }
 })
-mongoose.connect(config.mongoDbUri)
+fastify.register(fastifySwagger, config.swagger.options)
+mongoose.connect(config.mongoDbUri, {useUnifiedTopology: true})
     .then(() => console.log('MongoDB connected…'))
     .catch(err => console.log(err))
 
-import setRoutes from './routes/index'
-setRoutes(fastify)
 
-// Run the server!
+import applyRoutes from './routes'
+applyRoutes(fastify, dbx)
+
 const start = async () => {
     try {
         await fastify.listen(3000)
-        fastify.log.info(`server listening on ${fastify.server.address()}`)
+        fastify.swagger()
     } catch (err) {
         fastify.log.error(err)
         process.exit(1)

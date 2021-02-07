@@ -1,5 +1,17 @@
 import {Schema, model} from "mongoose"
-import {Resume} from "../classes/resume";
+import {Resume, SkillsSection, Social, TimeNote} from "../classes/resume";
+import {Text} from "../classes";
 
-const resumeSchema = new Schema(typeof Resume)
+const resumeSchema = new Schema({
+    photo: String,
+    header: Object,
+    intro: Object,
+    phone: Object,
+    email: Object,
+    address: Object,
+    social: Array,
+    skills: Array,
+    experience: Array,
+    education: Array,
+})
 export default model('Resume', resumeSchema)
