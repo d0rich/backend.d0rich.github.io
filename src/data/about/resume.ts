@@ -1,7 +1,7 @@
-import {Text, Social, SkillsSection, TimeNote} from "../../classes";
+import {Text, Social, SkillsSection, TimeNote, ImageModel} from "../../classes";
 
 export default {
-    photo: '/dorich.jpg',
+    photo: new ImageModel({path: '/dorich.jpg', alt: new Text(), src: ''}),
     header: new Text('Николай Дорофеев', 'Nikolay Dorofeev'),
     intro: new Text('Я JavaScript разработчик из Томска (Россия). ' +
         'На данный момент я обучаюсь на 3-ем курсе в Томском Политехническом Университете на направлении  ' +

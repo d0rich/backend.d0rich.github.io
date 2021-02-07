@@ -14,7 +14,7 @@ export const getFilesList = (dbx: Dropbox) => {
 export const getFile = (dbx: Dropbox) => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            return (await dbx.filesGetTemporaryLink({ path: req.query['path'] }))
+            return (await dbx.filesGetTemporaryLink({ path: req.query['path'] })).result.link
         } catch (err){
             throw boomify(err)
         }

@@ -8,11 +8,11 @@ export default function(fastify: FastifyInstance, dbx: Dropbox){
         schema: {
             description: 'Get list of files',
             tags: ['dropbox'],
-            summary: 'get list of files',
+            summary: 'Get list of files',
             security: [{"apiKey": []}]
         }
     }, CRUD.getFilesList(dbx))
-    fastify.get('/api/dbx/file/get/link', {
+    fastify.get('/api/dbx/files/get/link', {
         schema: {
             description: 'Get temporary link to file',
             tags: ['dropbox'],

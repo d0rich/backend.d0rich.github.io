@@ -9,7 +9,7 @@ export const getResume = (dbx: Dropbox) => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
             const result = await Resume.findOne()
-            result['photo'] = (await dbx.filesGetTemporaryLink({ path: result['photo'] })).result.link
+            //result['photo'] = (await dbx.filesGetTemporaryLink({ path: result['photo'] })).result.link
             return result
         } catch (err) {
             throw boomify(err)
