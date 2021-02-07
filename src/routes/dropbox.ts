@@ -4,22 +4,16 @@ import {Dropbox} from "dropbox"
 import * as CRUD from '../controllers/dropbox'
 
 export default function(fastify: FastifyInstance, dbx: Dropbox){
-    fastify.get('/api/dbx/getFiles', {
+    fastify.get('/api/dbx/files/get/list', {
         schema: {
-            // @ts-ignore
             description: 'Get list of files',
             tags: ['dropbox'],
             summary: 'get list of files',
-            security: [
-                {
-                    "apiKey": []
-                }
-            ]
+            security: [{"apiKey": []}]
         }
-    }, CRUD.getFiles(dbx))
-    fastify.get('/api/dbx/getFile', {
+    }, CRUD.getFilesList(dbx))
+    fastify.get('/api/dbx/file/get/link', {
         schema: {
-            // @ts-ignore
             description: 'Get temporary link to file',
             tags: ['dropbox'],
             summary: 'Get temporary link to file',
@@ -32,11 +26,7 @@ export default function(fastify: FastifyInstance, dbx: Dropbox){
                     }
                 }
             },
-            security: [
-                {
-                    "apiKey": []
-                }
-            ]
+            security: [{"apiKey": []}]
         }
     }, CRUD.getFile(dbx))
 }

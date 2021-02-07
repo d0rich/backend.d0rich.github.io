@@ -13,15 +13,15 @@ export const swagger = {
         exposeRoute: true,
         swagger: {
             info: {
-                title: 'Fastify API',
-                description: 'Building a blazing fast REST API with Node.js, MongoDB, Fastify and Swagger',
+                title: 'Dorich site API',
+                description: 'API special for dorich site',
                 version: '1.0.0'
             },
             externalDocs: {
                 url: 'https://swagger.io',
                 description: 'Find more info here'
             },
-            host: 'localhost',
+            host: 'https://dorich-server.herokuapp.com',
             schemes: ['http'],
             consumes: ['application/json'],
             produces: ['application/json']
