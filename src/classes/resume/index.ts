@@ -6,9 +6,10 @@ import {Text} from "../text";
 import {SkillsSection} from "./skillsSection";
 import {Social} from "./social";
 import {TimeNote} from "./timeNote";
+import {ImageModel} from "../imageModel";
 
 const resumeExample = {
-    photo: '',
+    photo: new ImageModel(),
     header: new Text(),
     intro: new Text(),
     phone: new Text(),
@@ -21,7 +22,7 @@ const resumeExample = {
 }
 
 export class Resume{
-    photo: string
+    photo: ImageModel
     header: Text
     intro: Text
     phone: Text
@@ -34,7 +35,7 @@ export class Resume{
 
 
     constructor(resume = resumeExample) {
-        this.photo = resume.photo
+        this.photo = new ImageModel(resume.photo)
         this.header = Text.fromObj(resume.header)
         this.intro = Text.fromObj(resume.intro)
         this.phone = Text.fromObj(resume.phone)

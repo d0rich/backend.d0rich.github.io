@@ -3,7 +3,7 @@ import {Resume, SkillsSection, Social, TimeNote} from "../classes/resume";
 import {Text} from "../classes";
 
 const resumeSchema = new Schema({
-    photo: String,
+    photo: Object,
     header: Object,
     intro: Object,
     phone: Object,
