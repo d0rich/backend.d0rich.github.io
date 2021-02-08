@@ -1,6 +1,4 @@
 import {Schema, model} from "mongoose"
-import {Resume, SkillsSection, Social, TimeNote} from "../classes/resume";
-import {Text} from "../classes";
 
 const resumeSchema = new Schema({
     photo: Object,

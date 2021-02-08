@@ -1,5 +1,7 @@
 import  createFastify from 'fastify'
 import * as mongoose from 'mongoose'
+import {Sequelize} from "sequelize"
+import {createPostgreModels} from "./models/postgre";
 import fastifySwagger from "fastify-swagger"
 import { Dropbox } from 'dropbox'
 import * as config from './config'
@@ -14,7 +16,26 @@ fastify.register(fastifySwagger, config.swagger.options)
 mongoose.connect(config.mongoDbUri, {useUnifiedTopology: true})
     .then(() => console.log('MongoDB connected…'))
     .catch(err => console.log(err))
-
+const sequelize = new Sequelize(
+    config.postgre.credentials.database,
+    config.postgre.credentials.user,
+    config.postgre.credentials.password,
+    {
+        logging: false,
+        host: config.postgre.credentials.host,
+        dialect: "postgres",
+        protocol: config.postgre.options.protocol,
+        dialectOptions: config.postgre.options.dialectOptions,
+        define: {
+            timestamps: config.postgre.options.timestamps
+        }
+    })
+export const models = createPostgreModels(sequelize)
+sequelize.sync({ force: false, alter: false })
+    .then(result => {
+        console.log('PostgreSQL connected…')
+    })
+    .catch(err => console.error(err));
 
 import applyRoutes from './routes'
 applyRoutes(fastify, dbx)

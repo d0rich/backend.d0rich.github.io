@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
-import Resume from '../models/resume'
+import Resume from '../models/mongo/resume'
 
 import resumeExample from '../data/about/resume'
 import {Dropbox} from "dropbox";
