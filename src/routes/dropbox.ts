@@ -29,4 +29,11 @@ export default function(fastify: FastifyInstance, dbx: Dropbox){
             security: [{"apiKey": []}]
         }
     }, CRUD.getFile(dbx))
+
+    fastify.post('/api/dbx/files/get/link', {
+        schema: {
+            description: 'Get temporary link to file',
+            tags: ['dropbox'],
+        }
+    }, CRUD.generatePlaceholder(dbx))
 }
