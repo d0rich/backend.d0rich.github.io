@@ -1,7 +1,7 @@
 import {FastifyInstance} from "fastify"
 import {Dropbox} from "dropbox"
 
-import * as CRUD from '../controllers/dropbox'
+import * as dbxController from '../controllers/dropbox'
 
 export default function(fastify: FastifyInstance, dbx: Dropbox){
     fastify.get('/api/dbx/files/get/list', {
@@ -11,7 +11,7 @@ export default function(fastify: FastifyInstance, dbx: Dropbox){
             summary: 'Get list of files',
             security: [{"apiKey": []}]
         }
-    }, CRUD.getFilesList(dbx))
+    }, dbxController.getFilesList(dbx))
     fastify.get('/api/dbx/files/get/link', {
         schema: {
             description: 'Get temporary link to file',
@@ -28,12 +28,12 @@ export default function(fastify: FastifyInstance, dbx: Dropbox){
             },
             security: [{"apiKey": []}]
         }
-    }, CRUD.getFile(dbx))
+    }, dbxController.getFile(dbx))
 
-    fastify.post('/api/dbx/files/get/link', {
+    fastify.post('/api/dbx/files/images/put/svg-placeholder', {
         schema: {
-            description: 'Get temporary link to file',
+            description: 'Create svg placeholder in dropbox',
             tags: ['dropbox'],
         }
-    }, CRUD.generatePlaceholder(dbx))
+    }, dbxController.generatePlaceholder(dbx))
 }

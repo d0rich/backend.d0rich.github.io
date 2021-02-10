@@ -3,18 +3,17 @@ import {Dropbox} from "dropbox";
 const Handlebars = require('handlebars')
 const rgbHex     = require('rgb-hex')
 import sizeOf     from 'image-size'
+import * as path from "path";
 const triangulate = require('delaunay-triangulate')
 const getPixels = require('get-pixels')
 const fs         = require('fs')
 
 
-export const createPlaceholder = async (path: string, dbx: Dropbox) => {
+export const createPlaceholder = async (filepath: string, dbx: Dropbox) => {
 
-    const data = await dbx.filesDownload({path: path})
+    const data = await dbx.filesDownload({path: filepath})
 
-    fs.writeFileSync( data.result.name, (<any> data).result.fileBinary, {encoding: "binary"} )
-
-    const image = fs.readFileSync(data.result.name)
+    const image = Buffer.from((<any> data).result.fileBinary)
 
     const size   = sizeOf(image)
     const height = size.height
@@ -22,7 +21,7 @@ export const createPlaceholder = async (path: string, dbx: Dropbox) => {
 
     let svg = null
 
-    getPixels(image, 'image/jpg', (err, pixels) => {
+    getPixels(image, `image/${path.extname(filepath).replace('.','')}`, (err, pixels) => {
         // Генерируем вершины треугольников
         const basePoints = [];
 
@@ -92,7 +91,6 @@ export const createPlaceholder = async (path: string, dbx: Dropbox) => {
         const template = Handlebars.compile(fs.readFileSync('./triangulate-template.svg', 'utf-8'))
         svg = template({height, width, polygons})
     })
-    fs.unlinkSync(data.result.name)
     return svg
 
 }
