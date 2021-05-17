@@ -37,13 +37,13 @@ export const generatePlaceholder = (dbx: Dropbox) => {
 
 export const methods = {
     async getImgLinks(path: string, dbx: Dropbox){
-        const imgPair = await models.imgPair.findByPk(path)
+        const imgPair = await models.imgPairs.findByPk(path)
         let phImg = ''
         if (!imgPair){
             phImg = `/svg-placeholders/${+new Date()}.svg`
             const svg = await createPlaceholder(path, dbx)
             await dbx.filesUpload({path: phImg, contents: svg})
-            await models.imgPair.create({ originalPath: path, placeholderPath: phImg })
+            await models.imgPairs.create({ originalPath: path, placeholderPath: phImg })
         }
         else {
             phImg = imgPair['placeholderPath']

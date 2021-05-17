@@ -1,7 +1,7 @@
 import  createFastify from 'fastify'
 import * as mongoose from 'mongoose'
 import {Sequelize} from "sequelize"
-import {createPostgreModels} from "./models/postgre";
+import {initModels} from "./models/postgre";
 import fastifySwagger from "fastify-swagger"
 import { Dropbox } from 'dropbox'
 import * as config from './config'
@@ -30,7 +30,7 @@ const sequelize = new Sequelize(
             timestamps: config.postgre.options.timestamps
         }
     })
-export const models = createPostgreModels(sequelize)
+export const models = initModels(sequelize)
 sequelize.sync({ force: false, alter: false })
     .then(result => {
         console.log('PostgreSQL connected…')

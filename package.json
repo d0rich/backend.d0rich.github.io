@@ -26,6 +26,7 @@
     "image-size": "^0.9.3",
     "mongoose": "^5.11.15",
     "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
     "pino-pretty": "^4.5.0",
     "rgb-hex": "^3.0.0",
     "sequelize": "^6.5.0",
@@ -33,6 +34,7 @@
     "typescript": "^4.1.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "sequelize-auto": "^0.8.3"
   }
 }
