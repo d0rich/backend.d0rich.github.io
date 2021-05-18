@@ -1,7 +1,7 @@
 import  createFastify from 'fastify'
-import * as mongoose from 'mongoose'
+import mongoose from "mongoose";
 import {Sequelize} from "sequelize"
-import {initModels} from "./models/postgre";
+import {initModels} from "./models/auth";
 import fastifySwagger from "fastify-swagger"
 import { Dropbox } from 'dropbox'
 import * as config from './config'
@@ -13,6 +13,10 @@ const fastify = createFastify({
     }
 })
 fastify.register(fastifySwagger, config.swagger.options)
+fastify.register(require('fastify-rate-limit'), {
+    max: 100,
+    timeWindow: '1 minute'
+})
 mongoose.connect(config.mongoDbUri, {useUnifiedTopology: true})
     .then(() => console.log('MongoDB connected…'))
     .catch(err => console.log(err))
@@ -29,8 +33,9 @@ const sequelize = new Sequelize(
         define: {
             timestamps: config.postgre.options.timestamps
         }
+
     })
-export const models = initModels(sequelize)
+export const db = initModels(sequelize)
 sequelize.sync({ force: false, alter: false })
     .then(result => {
         console.log('PostgreSQL connected…')
