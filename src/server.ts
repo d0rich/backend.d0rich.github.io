@@ -1,7 +1,6 @@
 import  createFastify from 'fastify'
 import mongoose from "mongoose";
 import {Sequelize} from "sequelize"
-import {initModels} from "./models/auth";
 import fastifySwagger from "fastify-swagger"
 import { Dropbox } from 'dropbox'
 import * as config from './config'
@@ -20,23 +19,39 @@ fastify.register(require('fastify-rate-limit'), {
 })
 // Подключение к dropbox
 const dbx = new Dropbox({ accessToken: config.dropbox.token })
+
 // Подключение к mongodb
 mongoose.connect(config.mongoDbUri, {useUnifiedTopology: true})
     .then(() => console.log('MongoDB connected…'))
     .catch(err => console.log(err))
+
 // Подключение к Postgres Auth
-const sequelize = new Sequelize(
+import {initModels} from "./models/auth";
+const sequelizeAuth = new Sequelize(
     config.postgresAuth.db,
     config.postgresAuth.user,
     config.postgresAuth.password,
     config.postgresAuth.options)
-export const db = initModels(sequelize)
-sequelize.sync({ force: false, alter: false })
+export const db = initModels(sequelizeAuth)
+sequelizeAuth.sync({ force: false, alter: false })
     .then(result => {
-        console.log('PostgreSQL connected…')
+        console.log('PostgreSQL auth connected…')
     })
     .catch(err => console.error(err));
 
+// Подключение к Postgres Projects
+import * as projectsModels from "./models/projects";
+const sequelizeProjects = new Sequelize(
+    config.postgresProjects.db,
+    config.postgresProjects.user,
+    config.postgresProjects.password,
+    config.postgresProjects.options)
+export const projectsDb = projectsModels.initModels(sequelizeProjects)
+sequelizeProjects.sync({ force: false, alter: false })
+    .then(result => {
+        console.log('PostgreSQL projects connected…')
+    })
+    .catch(err => console.error(err));
 // Инициализация рутов
 import applyRoutes from './routes'
 applyRoutes(fastify, dbx)

@@ -40,3 +40,10 @@ export const postgresAuth = {
     password: 'cb7ec5210e19f9be4d84699912aa814d0120706905e871755e6b4cb06877a26a',
     options: require('./models/auth/seq-options.json')
 }
+
+export const postgresProjects = {
+    db: 'd9vnno52oduo3',
+    user: 'biwicxszdsocmb',
+    password: 'b12f81fac7497f27ded8d710d99a3057cd1c2a3d1317c0f63047297df55c82d2',
+    options: require('./models/projects/seq-options.json')
+}
