@@ -33,24 +33,10 @@ export const dropbox = {
     app_secret: 'od6gpz9gv2frkex',
     token: '8gwt88-F0vcAAAAAAAAAAXz3osFK7ZeTZaopG6AIVy5KUtq9QEFzD1zRvTENwzVP'
 }
-export const postgre = {
-    credentials: {
-        host: 'ec2-34-247-118-233.eu-west-1.compute.amazonaws.com',
-        database: 'd1aan3grkqof40',
-        user: 'ikfdkqogzxvpng',
-        port: 5432,
-        password: 'cb7ec5210e19f9be4d84699912aa814d0120706905e871755e6b4cb06877a26a',
-        url: 'postgres://ikfdkqogzxvpng:cb7ec5210e19f9be4d84699912aa814d0120706905e871755e6b4cb06877a26a@ec2-34-247-118-233.eu-west-1.compute.amazonaws.com:5432/d1aan3grkqof40'
-    },
-    options: {
-        timestamps: false,
-        dialect: "postgres",
-        protocol: 'postgres',
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            }
-        },
-    }
+
+export const postgresAuth = {
+    db: 'd1aan3grkqof40',
+    user: 'ikfdkqogzxvpng',
+    password: 'cb7ec5210e19f9be4d84699912aa814d0120706905e871755e6b4cb06877a26a',
+    options: require('./models/auth/seq-options.json')
 }

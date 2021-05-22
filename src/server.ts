@@ -6,35 +6,30 @@ import fastifySwagger from "fastify-swagger"
 import { Dropbox } from 'dropbox'
 import * as config from './config'
 
-const dbx = new Dropbox({ accessToken: config.dropbox.token })
+// Инициализация fastify
 const fastify = createFastify({
     logger: {
         prettyPrint: true
     }
 })
+// Регистрация middleware
 fastify.register(fastifySwagger, config.swagger.options)
 fastify.register(require('fastify-rate-limit'), {
     max: 100,
     timeWindow: '1 minute'
 })
+// Подключение к dropbox
+const dbx = new Dropbox({ accessToken: config.dropbox.token })
+// Подключение к mongodb
 mongoose.connect(config.mongoDbUri, {useUnifiedTopology: true})
     .then(() => console.log('MongoDB connected…'))
     .catch(err => console.log(err))
+// Подключение к Postgres Auth
 const sequelize = new Sequelize(
-    config.postgre.credentials.database,
-    config.postgre.credentials.user,
-    config.postgre.credentials.password,
-    {
-        logging: false,
-        host: config.postgre.credentials.host,
-        dialect: "postgres",
-        protocol: config.postgre.options.protocol,
-        dialectOptions: config.postgre.options.dialectOptions,
-        define: {
-            timestamps: config.postgre.options.timestamps
-        }
-
-    })
+    config.postgresAuth.db,
+    config.postgresAuth.user,
+    config.postgresAuth.password,
+    config.postgresAuth.options)
 export const db = initModels(sequelize)
 sequelize.sync({ force: false, alter: false })
     .then(result => {
@@ -42,9 +37,11 @@ sequelize.sync({ force: false, alter: false })
     })
     .catch(err => console.error(err));
 
+// Инициализация рутов
 import applyRoutes from './routes'
 applyRoutes(fastify, dbx)
 
+// Прослушивание адреса
 const start = async () => {
     try {
         await fastify.listen(process.env.PORT || 3000, '0.0.0.0')
