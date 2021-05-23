@@ -9,9 +9,11 @@ export interface projectsAttributes {
   id?: number;
   stringId: string;
   title: string[];
-  imgUrl: string;
+  imgPath: string;
   description: string[];
   url?: string;
+  githubUrl?: string;
+  date: string;
 }
 
 export type projectsPk = "id";
@@ -22,9 +24,11 @@ export class projects extends Model<projectsAttributes, projectsCreationAttribut
   id?: number;
   stringId!: string;
   title!: string[];
-  imgUrl!: string;
+  imgPath!: string;
   description!: string[];
   url?: string;
+  githubUrl?: string;
+  date!: string;
 
   // projects hasMany projects_tags via projectId
   projects_tags!: projects_tags[];
@@ -91,7 +95,7 @@ export class projects extends Model<projectsAttributes, projectsCreationAttribut
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false
     },
-    imgUrl: {
+    imgPath: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -102,6 +106,14 @@ export class projects extends Model<projectsAttributes, projectsCreationAttribut
     url: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    githubUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
     }
   }, {
     sequelize,

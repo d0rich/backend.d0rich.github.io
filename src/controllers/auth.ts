@@ -73,3 +73,22 @@ export const unauthorize = () => {
         }
     }
 }
+
+export const methods = {
+    checkToken: async (req: FastifyRequest, rep: FastifyReply) => {
+        const token = req.headers?.authorization
+        if (!token) {
+            rep.code(401)
+            rep.send('No token')
+            return false
+        }
+        const tokenInDb = await db.tokens.findByPk(token)
+        if (!tokenInDb || new Date(tokenInDb.expireAt) < new Date()){
+            await tokenInDb?.destroy()
+            rep.code(401)
+            rep.send('Unauthorised')
+            return false
+        }
+        return true
+    }
+}

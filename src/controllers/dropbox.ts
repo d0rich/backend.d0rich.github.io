@@ -48,12 +48,15 @@ export const methods = {
         else {
             phImg = imgPair['placeholderPath']
         }
-        const phImgSrc = await dbx.sharingCreateSharedLink({path: phImg })
-        const mainImgSrc = await dbx.sharingCreateSharedLink({path: path })
+        const phImgSrc = await dbx.sharingCreateSharedLinkWithSettings({path: phImg })
+        const mainImgSrc = await dbx.sharingCreateSharedLinkWithSettings({path: path })
 
         return {
             src: mainImgSrc.result.url.replace('?dl=0', '?raw=1'),
             phSrc: phImgSrc.result.url.replace('?dl=0', '?raw=1')
         }
+    },
+    async uploadImg(image: ArrayBuffer, path: string, dbx: Dropbox){
+        await dbx.filesUpload( { path, contents: image } )
     }
 }
