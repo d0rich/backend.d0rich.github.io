@@ -36,4 +36,6 @@ export default function(fastify: FastifyInstance, dbx: Dropbox){
             tags: ['dropbox'],
         }
     }, dbxController.generatePlaceholder(dbx))
+
+    fastify.get('/api/dbx/files/images/get/links', dbxController.getImageLinks(dbx))
 }

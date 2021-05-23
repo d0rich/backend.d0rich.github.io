@@ -27,8 +27,18 @@ export const getFile = (dbx: Dropbox) => {
 export const generatePlaceholder = (dbx: Dropbox) => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            const svg = await createPlaceholder(req.query['path'], dbx)
+            const svg = await createPlaceholder(req.body['path'], dbx)
             return await dbx.filesUpload({path: `/svg-placeholders/${+new Date()}.svg`, contents: svg})
+        } catch (err){
+            throw boomify(err)
+        }
+    }
+}
+
+export const getImageLinks = (dbx: Dropbox) => {
+    return async (req: FastifyRequest, rep: FastifyReply) => {
+        try {
+            return await methods.getImgLinks(req.query['path'], dbx)
         } catch (err){
             throw boomify(err)
         }
@@ -48,8 +58,8 @@ export const methods = {
         else {
             phImg = imgPair['placeholderPath']
         }
-        const phImgSrc = await dbx.sharingCreateSharedLinkWithSettings({path: phImg })
-        const mainImgSrc = await dbx.sharingCreateSharedLinkWithSettings({path: path })
+        const phImgSrc = await dbx.sharingCreateSharedLink({path: phImg })
+        const mainImgSrc = await dbx.sharingCreateSharedLink({path: path })
 
         return {
             src: mainImgSrc.result.url.replace('?dl=0', '?raw=1'),

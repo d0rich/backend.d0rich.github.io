@@ -5,6 +5,8 @@ import * as projectsController from '../controllers/projects'
 
 
 export default function(fastify: FastifyInstance, dbx: Dropbox){
+    fastify.get('/api/projects/get/all', projectsController.getProjects())
+    fastify.get('/api/projects/get/byId/:projectId', projectsController.getProject())
     fastify.post('/api/projects/edit', projectsController.createOrEditProject(dbx))
     fastify.get('/api/projects/tags/get/all', projectsController.getAllTags())
     fastify.post('/api/projects/tags/create', projectsController.createTag())
