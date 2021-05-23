@@ -9,7 +9,7 @@ export interface projectsAttributes {
   id?: number;
   stringId: string;
   title: string[];
-  imgPath: string;
+  imgUrl: string[];
   description: string[];
   url?: string;
   githubUrl?: string;
@@ -24,7 +24,7 @@ export class projects extends Model<projectsAttributes, projectsCreationAttribut
   id?: number;
   stringId!: string;
   title!: string[];
-  imgPath!: string;
+  imgUrl!: string[];
   description!: string[];
   url?: string;
   githubUrl?: string;
@@ -95,8 +95,8 @@ export class projects extends Model<projectsAttributes, projectsCreationAttribut
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false
     },
-    imgPath: {
-      type: DataTypes.STRING,
+    imgUrl: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false
     },
     description: {

@@ -12,7 +12,10 @@ export const getProjects = () => {
         try {
             const projectsOnPage: number = + req.query['onPage'] || 6
             const pageNumber: number = + req.query['page'] || 1
-            let tags: number[] = req.query['tags']?.split(',').map(id => +id) || []
+            let tags: number[] = req.query['tags']
+                ?.split(',')
+                .map(id => +id)
+                .filter(id => id !== 0) || []
             const tags_projects = await projectsDb.projects_tags.findAll({
                 where: { tagId: tags.length === 0 ? {[Op.ne] : null} : { [Op.in]: tags } }
             })
@@ -21,7 +24,7 @@ export const getProjects = () => {
                 order: [['date', 'DESC']],
                 limit: projectsOnPage,
                 offset: projectsOnPage * (pageNumber - 1),
-                attributes: ['id', 'stringId', 'title', 'date', 'imgPath'],
+                attributes: ['id', 'stringId', 'title', 'date', 'imgUrl'],
                 where: {
                     id: { [Op.in]: Array.from(projectIds) }
                 },
@@ -127,10 +130,11 @@ export const createOrEditProject = (dbx: Dropbox) => {
         if (await authController.methods.checkToken(req, rep))
             try {
                 const image = req.body['image']
-                let imagePath = ''
+                let links = {}
                 if (!!image){
-                    imagePath = `/projects/${+new Date()}.${image.type}`
+                    let imagePath = `/projects/${+new Date()}.${image.type}`
                     await dbxController.methods.uploadImg(Buffer.from(image.buffer), imagePath, dbx)
+                    links = await dbxController.methods.getImgLinks(imagePath, dbx)
                 }
                 const projectInDb = await projectsDb.projects.findByPk(req.body['id'])
                 if (!!projectInDb){
@@ -138,14 +142,14 @@ export const createOrEditProject = (dbx: Dropbox) => {
                     projectInDb.stringId = req.body['stringId']
                     projectInDb.description = req.body['description']
                     projectInDb.date = req.body['date']
-                    if (imagePath)
-                        projectInDb.imgPath = imagePath
+                    if (links['src'])
+                        projectInDb.imgUrl = [links['src'], links['phSrc']]
                     await setTagsAndTechs(projectInDb, req)
                     return await projectInDb.save()
                 }
                 const newProject = await projectsDb.projects.create({
                     date: req.body['date'],
-                    imgPath: imagePath,
+                    imgUrl: [links['src'], links['phSrc']],
                     description: req.body['description'],
                     stringId: req.body['stringId'],
                     title: req.body['title'],

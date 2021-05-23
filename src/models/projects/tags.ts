@@ -5,7 +5,7 @@ import type { projects_tags, projects_tagsId } from './projects_tags';
 
 export interface tagsAttributes {
   id?: number;
-  text?: string;
+  text: string;
 }
 
 export type tagsPk = "id";
@@ -14,7 +14,7 @@ export type tagsCreationAttributes = Optional<tagsAttributes, tagsPk>;
 
 export class tags extends Model<tagsAttributes, tagsCreationAttributes> implements tagsAttributes {
   id?: number;
-  text?: string;
+  text!: string;
 
   // tags belongsToMany projects via tagId and projectId
   projectId_projects!: projects[];
@@ -51,7 +51,7 @@ export class tags extends Model<tagsAttributes, tagsCreationAttributes> implemen
     },
     text: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     }
   }, {
     sequelize,
