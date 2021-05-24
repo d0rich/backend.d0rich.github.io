@@ -14,4 +14,5 @@ export default function(fastify: FastifyInstance, dbx: Dropbox){
     fastify.get('/api/projects/technologies/get/all', projectsController.getAllTechnologies())
     fastify.get('/api/projects/check/stringId/:stringId', projectsController.checkProjectStringId())
     fastify.post('/api/projects/technologies/edit', projectsController.editTechnology())
+    fastify.post('/api/projects/delete/:id', projectsController.deleteProject())
 }

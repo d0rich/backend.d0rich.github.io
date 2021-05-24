@@ -209,6 +209,24 @@ const setTagsAndTechs = async (project: projects, req: FastifyRequest) => {
     return project
 }
 
+export const deleteProject = () => {
+    return async (req: FastifyRequest, rep: FastifyReply) => {
+        if (await authController.methods.checkToken(req, rep))
+            try {
+                console.log(req.body)
+                return await projectsDb.projects.destroy(
+                    {
+                        where: {
+                            stringId: req.body['stringId'],
+                            id: req.params['id']
+                        }
+                    } )
+            } catch (err) {
+                throw boomify(err)
+            }
+    }
+}
+
 export const methods = {
 
 }
