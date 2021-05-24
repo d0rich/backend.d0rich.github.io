@@ -19,20 +19,20 @@ export const getProjects = () => {
             const tags_projects = await projectsDb.projects_tags.findAll({
                 where: { tagId: tags.length === 0 ? {[Op.ne] : null} : { [Op.in]: tags } }
             })
-            const projectIds = new Set( tags_projects.map(tp => tp.projectId) )
+            const projectIds = Array.from(new Set( tags_projects.map(tp => tp.projectId) ))
             let projects = await projectsDb.projects.findAll( {
                 order: [['date', 'DESC']],
                 limit: projectsOnPage,
                 offset: projectsOnPage * (pageNumber - 1),
                 attributes: ['id', 'stringId', 'title', 'date', 'imgUrl'],
                 where: {
-                    id: { [Op.in]: Array.from(projectIds) }
+                    id: { [Op.in]: projectIds }
                 },
                 include: [
                     { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } }
                 ]
             })
-            return projects
+            return { pages: Math.ceil(projectIds.length / projectsOnPage) ,projects}
         } catch (err) {
             throw boomify(err)
         }
@@ -44,7 +44,29 @@ export const getProject = () => {
         try {
             return await projectsDb.projects.findOne( {
                 where: {
-                    stringId: req.params['projectId']
+                    stringId: req.params['stringId']
+                },
+                include: [
+                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } },
+                    {
+                        model: projectsDb.technologies,
+                        as: 'technologyId_technologies',
+                        through: { attributes: ['version'] }
+                    }
+                ]
+            })
+        } catch (err) {
+            throw boomify(err)
+        }
+    }
+}
+
+export const getProjectById = () => {
+    return async (req: FastifyRequest, rep: FastifyReply) => {
+        try {
+            return await projectsDb.projects.findOne( {
+                where: {
+                    id: req.params['projectId']
                 },
                 include: [
                     { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } },
@@ -165,6 +187,7 @@ export const createOrEditProject = (dbx: Dropbox) => {
 }
 
 const setTagsAndTechs = async (project: projects, req: FastifyRequest) => {
+    console.log(project)
     await project.setTagId_tags( req.body['tags'] )
     const editTechnologiesPromises = []
     req.body['technologies'].forEach(tech => {
@@ -173,7 +196,7 @@ const setTagsAndTechs = async (project: projects, req: FastifyRequest) => {
             { where: { id: tech.id } }))
     })
     await Promise.all(editTechnologiesPromises)
-    await project.setTechnologies_in_projects([])
+    await projectsDb.technologies_in_project.destroy({where: {projectId: project.id}})
     await projectsDb.technologies_in_project.bulkCreate(
         req.body['technologies'].map(tech => {
             return {

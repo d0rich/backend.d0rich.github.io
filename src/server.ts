@@ -9,7 +9,8 @@ import * as config from './config'
 const fastify = createFastify({
     logger: {
         prettyPrint: true
-    }
+    },
+    bodyLimit: 20971520
 })
 // Регистрация middleware
 fastify.register(fastifySwagger, config.swagger.options)
