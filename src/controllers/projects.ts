@@ -164,6 +164,8 @@ export const createOrEditProject = (dbx: Dropbox) => {
                     projectInDb.stringId = req.body['stringId']
                     projectInDb.description = req.body['description']
                     projectInDb.date = req.body['date']
+                    projectInDb.githubUrl = req.body['githubUrl']
+                    projectInDb.url = req.body['url']
                     if (links['src'])
                         projectInDb.imgUrl = [links['src'], links['phSrc']]
                     await setTagsAndTechs(projectInDb, req)
