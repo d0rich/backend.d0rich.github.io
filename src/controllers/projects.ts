@@ -25,7 +25,7 @@ export const getProjects = () => {
                 where = { id: { [Op.in]: projectIds }}
             }
 
-            let projects = await projectsDb.projects.findAndCountAll( {
+            let projects = await projectsDb.projects.findAll( {
                 order: [['date', 'DESC']],
                 limit: projectsOnPage,
                 offset: projectsOnPage * (pageNumber - 1),
@@ -35,10 +35,14 @@ export const getProjects = () => {
                     { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } }
                 ]
             })
+            let count = await projectsDb.projects.count( {
+                attributes: [],
+                where
+            })
             return {
-                pages: Math.ceil(projects.count / projectsOnPage),
-                count: projects.count,
-                projects: projects.rows}
+                pages: Math.ceil(count / projectsOnPage),
+                count: count,
+                projects: projects}
         } catch (err) {
             throw boomify(err)
         }
