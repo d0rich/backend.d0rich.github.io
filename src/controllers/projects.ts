@@ -16,23 +16,29 @@ export const getProjects = () => {
                 ?.split(',')
                 .map(id => +id)
                 .filter(id => id !== 0) || []
-            const tags_projects = await projectsDb.projects_tags.findAll({
-                where: { tagId: tags.length === 0 ? {[Op.ne] : null} : { [Op.in]: tags } }
-            })
-            const projectIds = Array.from(new Set( tags_projects.map(tp => tp.projectId) ))
-            let projects = await projectsDb.projects.findAll( {
+            let where = null
+            if (tags.length > 0){
+                const tags_projects = await projectsDb.projects_tags.findAll({
+                    where: { tagId: tags.length === 0 ? {[Op.ne] : null} : { [Op.in]: tags } }
+                })
+                const projectIds = Array.from(new Set( tags_projects.map(tp => tp.projectId) ))
+                where = { id: { [Op.in]: projectIds }}
+            }
+
+            let projects = await projectsDb.projects.findAndCountAll( {
                 order: [['date', 'DESC']],
                 limit: projectsOnPage,
                 offset: projectsOnPage * (pageNumber - 1),
                 attributes: ['id', 'stringId', 'title', 'date', 'imgUrl'],
-                where: {
-                    id: { [Op.in]: projectIds }
-                },
+                where,
                 include: [
                     { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } }
                 ]
             })
-            return { pages: Math.ceil(projectIds.length / projectsOnPage) ,projects}
+            return {
+                pages: Math.ceil(projects.count / projectsOnPage),
+                count: projects.count,
+                projects: projects.rows}
         } catch (err) {
             throw boomify(err)
         }
