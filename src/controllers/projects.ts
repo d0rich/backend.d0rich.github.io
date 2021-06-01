@@ -19,6 +19,7 @@ export const getProjects = () => {
             let where = null
             if (tags.length > 0){
                 const tags_projects = await projectsDb.projects_tags.findAll({
+                    attributes: ['projectId'],
                     where: { tagId: tags.length === 0 ? {[Op.ne] : null} : { [Op.in]: tags } }
                 })
                 const projectIds = Array.from(new Set( tags_projects.map(tp => tp.projectId) ))
