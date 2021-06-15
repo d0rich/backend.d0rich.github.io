@@ -165,7 +165,7 @@ export const createOrEditProject = (dbx: Dropbox) => {
                 const image = req.body['image']
                 let links = {}
                 if (!!image){
-                    let imagePath = `/projects/${+new Date()}.${image.type}`
+                    let imagePath = `/projects/${req.body['stringId']}/${+new Date()}.${image.type}`
                     await dbxController.methods.uploadImg(Buffer.from(image.buffer), imagePath, dbx)
                     links = await dbxController.methods.getImgLinks(imagePath, dbx)
                 }

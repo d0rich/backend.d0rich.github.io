@@ -50,7 +50,7 @@ export const methods = {
         const imgPair = await db.imgPairs.findByPk(path)
         let phImg = ''
         if (!imgPair){
-            phImg = `/svg-placeholders/${+new Date()}.svg`
+            phImg = path.split('.')[0] + `.svg`
             const svg = await createPlaceholder(path, dbx)
             await dbx.filesUpload({path: phImg, contents: svg})
             await db.imgPairs.create({ originalPath: path, placeholderPath: phImg })
