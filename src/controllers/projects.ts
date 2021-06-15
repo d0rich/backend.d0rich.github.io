@@ -5,7 +5,7 @@ import * as authController from "./auth";
 import {projectsDb} from '../server'
 import {Dropbox} from "dropbox";
 import {projects} from "../models/projects";
-import {Op} from "sequelize";
+import {fn, Op, literal} from "sequelize";
 
 export const getProjects = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
@@ -33,7 +33,7 @@ export const getProjects = () => {
                 attributes: ['id', 'stringId', 'title', 'date', 'imgUrl'],
                 where,
                 include: [
-                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } }
+                    { model: projectsDb.tags, order: ['text'], as: 'tagId_tags', through: { attributes: [] } }
                 ]
             })
             let count = await projectsDb.projects.count( {
@@ -58,9 +58,10 @@ export const getProject = () => {
                     stringId: req.params['stringId']
                 },
                 include: [
-                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } },
+                    { model: projectsDb.tags, order: ['text'], as: 'tagId_tags', through: { attributes: [] } },
                     {
                         model: projectsDb.technologies,
+                        order: ['name'],
                         as: 'technologyId_technologies',
                         through: { attributes: ['version'] }
                     }
@@ -97,7 +98,22 @@ export const getProjectById = () => {
 export const getAllTags = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            return await projectsDb.tags.findAll()
+            return await projectsDb.tags.findAll({ order: ['text'] })
+        } catch (err) {
+            throw boomify(err)
+        }
+    }
+}
+
+export const getTagsForFilters = () => {
+    return async (req: FastifyRequest, rep: FastifyReply) => {
+        try {
+            return await projectsDb.tags.findAll({
+                group: ['projects_tags.tagId', 'tags.id'],
+                order: [[literal('projects'), 'DESC'], 'text'],
+                attributes: [ 'id', 'text', [fn('count', 'projects_tags.tagId'), 'projects'] ],
+                include: { model: projectsDb.projects_tags, attributes: [], as: 'projects_tags', required: true }
+            })
         } catch (err) {
             throw boomify(err)
         }
@@ -118,7 +134,7 @@ export const createTag = () => {
 export const getAllTechnologies = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            return await projectsDb.technologies.findAll()
+            return await projectsDb.technologies.findAll({order: ['name']})
         } catch (err) {
             throw boomify(err)
         }
