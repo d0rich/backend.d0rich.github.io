@@ -33,13 +33,19 @@ export const getProjects = () => {
                 attributes: ['id', 'stringId', 'title', 'date', 'imgUrl'],
                 where,
                 include: [
-                    { model: projectsDb.tags, order: ['text'], as: 'tagId_tags', through: { attributes: [] } }
+                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } }
                 ]
             })
-            let count = await projectsDb.projects.count( {
-                attributes: [],
-                where
+            let count = await projectsDb.projects.count( { attributes: [], where })
+
+            projects.forEach(pr => {
+                pr.tagId_tags.sort((a, b) => {
+                    if (a.text < b.text) return -1
+                    if (a.text > b.text) return 1
+                    return 0
+                })
             })
+            console.log(projects)
             return {
                 pages: Math.ceil(count / projectsOnPage),
                 count: count,
@@ -53,20 +59,30 @@ export const getProjects = () => {
 export const getProject = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            return await projectsDb.projects.findOne( {
+            const  project = await projectsDb.projects.findOne( {
                 where: {
                     stringId: req.params['stringId']
                 },
                 include: [
-                    { model: projectsDb.tags, order: ['text'], as: 'tagId_tags', through: { attributes: [] } },
+                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } },
                     {
                         model: projectsDb.technologies,
-                        order: ['name'],
                         as: 'technologyId_technologies',
                         through: { attributes: ['version'] }
                     }
                 ]
             })
+            project.tagId_tags.sort((a, b) => {
+                if (a.text < b.text) return -1
+                if (a.text > b.text) return 1
+                return 0
+            })
+            project.technologyId_technologies.sort((a, b) => {
+                if (a.name < b.name) return -1
+                if (a.name > b.name) return 1
+                return 0
+            })
+            return project
         } catch (err) {
             throw boomify(err)
         }
