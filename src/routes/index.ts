@@ -5,6 +5,7 @@ import applyResumeRoutes from './resume'
 import applyDropboxRoutes from './dropbox'
 import applyAuthRoutes from './auth'
 import applyProjectsRoutes from './projects'
+import applySEOController from './seo'
 
 export default function (fastify: FastifyInstance, dbx: Dropbox){
     fastify.addHook('onRequest', (request: FastifyRequest, reply :FastifyReply, done) => {
@@ -59,4 +60,5 @@ export default function (fastify: FastifyInstance, dbx: Dropbox){
     applyDropboxRoutes(fastify, dbx)
     applyAuthRoutes(fastify)
     applyProjectsRoutes(fastify, dbx)
+    applySEOController(fastify)
 }
