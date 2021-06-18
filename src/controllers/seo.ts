@@ -11,7 +11,7 @@ export const generateSiteMap = () => {
                 .att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9')
                 .att('xmlns:xhtml', 'http://www.w3.org/1999/xhtml')
             // Функция для добавления адреса на 2 языках
-            const addUrl = (urlset: xmlbuilder.XMLElement,
+            const addUrl = (sitemap: xmlbuilder.XMLElement,
                             loc: String,
                             priority: Number | undefined = undefined,
                             lastmod: Date | undefined = undefined,
@@ -29,7 +29,7 @@ export const generateSiteMap = () => {
 
                     return [year, month, day].join('-');
                 }
-                let url = urlset.ele('url')
+                let url = sitemap.ele('url')
                 url.ele('loc', {}, baseUrl + '/ru' + loc)
                 if (priority) {
                     url.ele('priority', {}, priority)
@@ -47,18 +47,17 @@ export const generateSiteMap = () => {
                 })
             }
             // Создание xml
-            const urlset = sitemap.ele('urlset')
-            addUrl(urlset, '/', 1.0, undefined, 'monthly')
-            addUrl(urlset, '/portfolio', 0.8, undefined, 'monthly')
+            addUrl(sitemap, '/', 1.0, undefined, 'monthly')
+            addUrl(sitemap, '/portfolio', 0.8, undefined, 'monthly')
             const projects = await projectsDb.projects.findAll({
                 attributes: ['stringId', 'updatedAt'],
                 order: [['date', 'DESC']]
             })
             projects.forEach(project => {
-                addUrl(urlset, `/portfolio/${project.stringId}`, 0.7 , project.updatedAt)
+                addUrl(sitemap, `/portfolio/${project.stringId}`, 0.7 , project.updatedAt)
             })
-            addUrl(urlset, '/about', 0.95, undefined, 'monthly')
-            addUrl(urlset, '/about/resume', 0.5, undefined, 'monthly')
+            addUrl(sitemap, '/about', 0.95, undefined, 'monthly')
+            addUrl(sitemap, '/about/resume', 0.5, undefined, 'monthly')
             rep.type('file/xml')
             return sitemap.end({pretty: true})
         } catch (err) {
