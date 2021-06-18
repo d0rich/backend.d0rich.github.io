@@ -14,6 +14,8 @@ export interface projectsAttributes {
   url?: string;
   githubUrl?: string;
   date: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type projectsPk = "id";
@@ -29,6 +31,8 @@ export class projects extends Model<projectsAttributes, projectsCreationAttribut
   url?: string;
   githubUrl?: string;
   date!: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 
   // projects hasMany projects_tags via projectId
   projects_tags!: projects_tags[];
@@ -119,7 +123,7 @@ export class projects extends Model<projectsAttributes, projectsCreationAttribut
     sequelize,
     tableName: 'projects',
     schema: 'public',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "projects_pk",

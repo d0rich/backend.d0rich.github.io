@@ -1,1 +1,0 @@
-sequelize-auto -l ts -o "./src/models/projects" -c "./src/models/projects/seq-options.json" -d "d9vnno52oduo3" -u "biwicxszdsocmb" -x "b12f81fac7497f27ded8d710d99a3057cd1c2a3d1317c0f63047297df55c82d2" -p 5432 -e postgres
