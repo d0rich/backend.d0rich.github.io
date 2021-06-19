@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
-import ResumeSchema from '../models/mongo/resume'
+import ResumeSchema from '../db/mongo/resume'
 import {Resume} from "../classes/resume";
 import resumeExample from '../data/about/resume'
 import {Dropbox} from "dropbox";
@@ -30,10 +30,7 @@ export const addResumeFromData  = (dbx: Dropbox) => {
     return  async (req: FastifyRequest, rep: FastifyReply) => {
         try {
             await ResumeSchema.remove()
-            const resume = new Resume(resumeExample)
-            const imgLinks = await dbxController.methods.getImgLinks(resume.photo.path, dbx)
-            resume.photo.src = imgLinks.src
-            resume.photo.phSrc = imgLinks.phSrc
+            const resume = new Resume()
             return new ResumeSchema(resume).save()
         } catch (err){
             throw boomify(err)

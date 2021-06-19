@@ -6,5 +6,5 @@ import * as resumeController from '../controllers/resume'
 
 export default function(fastify: FastifyInstance, dbx: Dropbox){
     fastify.get('/api/resume/get', resumeController.getResume(dbx))
-    fastify.put('/api/resume/put', resumeController.addResumeFromData(dbx))
+    fastify.post('/api/resume/edit', resumeController.addResumeFromData(dbx))
 }

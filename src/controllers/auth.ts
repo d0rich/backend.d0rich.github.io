@@ -1,13 +1,13 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
-import { db } from '../server'
+import { authDb } from '../server'
 
 export const authorizeByPwd = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
             const authData: any = req.body
             console.log(authData)
-            const userToAuth = await db.users.findOne({where: { login: authData?.login }})
+            const userToAuth = await authDb.users.findOne({where: { login: authData?.login }})
             if (!userToAuth) {
                 rep.code(404)
                 return `Error: no user with login ${authData.login}`
@@ -35,7 +35,7 @@ export const authorizeByToken = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
             const authData: any = req.body
-            const tokenInDb = await db.tokens.findByPk(authData?.token)
+            const tokenInDb = await authDb.tokens.findByPk(authData?.token)
             if (!tokenInDb) {
                 rep.code(404)
                 return `Error: token not found`
@@ -61,7 +61,7 @@ export const unauthorize = () => {
         try {
             console.log(req.body)
             const authData: any = req.body
-            const tokenInDb = await db.tokens.findByPk(authData?.token)
+            const tokenInDb = await authDb.tokens.findByPk(authData?.token)
             if (!tokenInDb) {
                 rep.code(404)
                 return `Error: token not found`
@@ -82,7 +82,7 @@ export const methods = {
             rep.send('No token')
             return false
         }
-        const tokenInDb = await db.tokens.findByPk(token)
+        const tokenInDb = await authDb.tokens.findByPk(token)
         if (!tokenInDb || new Date(tokenInDb.expireAt) < new Date()){
             await tokenInDb?.destroy()
             rep.code(401)

@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
-import {db, projectsDb} from '../server'
+import {authDb, projectsDb} from '../server'
 import xmlbuilder from "xmlbuilder";
 
 export const generateSiteMap = () => {

@@ -4,7 +4,7 @@ import * as dbxController from "./dropbox";
 import * as authController from "./auth";
 import {projectsDb} from '../server'
 import {Dropbox} from "dropbox";
-import {projects} from "../models/projects";
+import {projects} from "../db/projects";
 import {fn, Op, literal} from "sequelize";
 
 export const getProjects = () => {

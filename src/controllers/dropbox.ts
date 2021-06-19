@@ -2,7 +2,7 @@ import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
 import {Dropbox} from "dropbox"
 import {createPlaceholder} from "../classes/imageWorker/createPlaceholder";
-import {db} from "../server";
+import {authDb} from "../server";
 
 export const getFilesList = (dbx: Dropbox) => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
@@ -47,13 +47,13 @@ export const getImageLinks = (dbx: Dropbox) => {
 
 export const methods = {
     async getImgLinks(path: string, dbx: Dropbox){
-        const imgPair = await db.imgPairs.findByPk(path)
+        const imgPair = await authDb.imgPairs.findByPk(path)
         let phImg = ''
         if (!imgPair){
             phImg = path.split('.')[0] + `.svg`
             const svg = await createPlaceholder(path, dbx)
             await dbx.filesUpload({path: phImg, contents: svg})
-            await db.imgPairs.create({ originalPath: path, placeholderPath: phImg })
+            await authDb.imgPairs.create({ originalPath: path, placeholderPath: phImg })
         }
         else {
             phImg = imgPair['placeholderPath']
