@@ -5,37 +5,24 @@ import {Resume} from "../classes/resume";
 import {Dropbox} from "dropbox";
 
 import * as dbxController from '../controllers/dropbox'
+import {firestore} from "firebase-admin/lib/firestore";
 
 export const getResume = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            const query = await resumeDb.resume.doc(req.params['id']).get()
-            if (!query.exists){
+            const documentSnapshot = await resumeDb.resume.doc(req.params['id']).get()
+            if (!documentSnapshot.exists){
                 rep.code(404)
                 return 'Document not found'
             }
-            const resumeData = query.data()
+            const resumeData = documentSnapshot.data()
             return {
                 ...resumeData,
-                photo: (await resumeData.photo?.get())?.data(),
-                social: resumeData.social ?
-                    await Promise.all(resumeData.social?.map(async s => (await s.get())?.data()))
-                    : [],
-                skills: resumeData.skills ?
-                    await Promise.all(resumeData.skills?.map(async s => (await s.get())?.data()))
-                    : [],
-                education: resumeData.education ?
-                    await Promise.all(resumeData.education?.map(async ed => {
-                        const timeNote = (await ed.get())?.data()
-                        return {
-                            ...timeNote,
-                            period: {
-                                begin: new Date(timeNote?.period?.begin.seconds * 1000),
-                                end: new Date(timeNote?.period?.end.seconds * 1000)
-                            }
-                        }
-                    }))
-                    : []
+                photo: await methods.getNestedDocument(resumeData.photo),
+                social: await methods.getNestedArray(resumeData.social),
+                skills: await methods.getNestedArray(resumeData.skills),
+                education: await methods.getNestedArray(resumeData.education),
+                experience: await methods.getNestedArray(resumeData.experience)
             }
         } catch (err) {
             throw boomify(err)
@@ -76,5 +63,35 @@ export const test = (dbx: Dropbox) => {
         } catch (err){
             throw boomify(err)
         }
+    }
+}
+
+const methods = {
+    async getNestedDocument(ref: firestore.DocumentReference | undefined){
+        try {
+            const documentSnapshot = await ref.get()
+            return  {
+                id: documentSnapshot.id,
+                ...documentSnapshot.data()
+            }
+        }
+        catch (e){
+            return ref
+        }
+    },
+    async getNestedArray(refs: firestore.DocumentReference[] | undefined){
+        return refs ?
+            await Promise.all(refs?.map(async ref => {
+                try {
+                    const documentSnapshot = await ref.get()
+                    return  {
+                        id: documentSnapshot.id,
+                        ...documentSnapshot.data()
+                    }
+                }
+                catch (e){
+                    return ref
+                }
+            })) : []
     }
 }
