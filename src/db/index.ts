@@ -4,8 +4,9 @@ import * as config from '../config'
 
 import * as authModels from "./auth";
 import * as projectsModels from "./projects";
+import * as firebase from "firebase-admin"
 
-export const initDbs = () => {
+export const initDbs = (firebaseApp: firebase.app.App) => {
     // Подключение к mongodb
     mongoose.connect(config.mongoDbUri, {useUnifiedTopology: true})
         .then(() => console.log('MongoDB connected…'))
@@ -41,6 +42,15 @@ export const initDbs = () => {
         })
         .catch(err => console.error(err));
 
-    return { authDb, projectsDb }
+    // Подключение к firestore
+    const firestore = firebaseApp.firestore()
+    const resumeDb = {
+        resume: firestore.collection('resume'),
+        images: firestore.collection('images'),
+        education: firestore.collection('education'),
+        skills: firestore.collection('skills'),
+        social: firestore.collection('social')
+    }
+    return { authDb, projectsDb, resumeDb }
 }
 

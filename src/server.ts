@@ -1,9 +1,7 @@
 import createFastify, {FastifyReply, FastifyRequest} from 'fastify'
-import mongoose from "mongoose";
-import {Sequelize} from "sequelize"
-import fastifySwagger from "fastify-swagger"
 import { Dropbox } from 'dropbox'
-import { initDbs } from "./db";
+import * as firebase from "firebase-admin"
+import { initDbs } from "./db"
 import * as config from './config'
 
 // Инициализация fastify
@@ -22,9 +20,15 @@ fastify.register(require('fastify-rate-limit'), {
 // Подключение к dropbox
 const dbx = new Dropbox({ accessToken: config.dropbox.token })
 
+// Подключение к firebase
+
+const firebaseApp = firebase.initializeApp({
+    credential: firebase.credential.cert(require('./account_key.json'))
+})
+
 // Подключение к базам данных
-const { authDb, projectsDb } = initDbs()
-export { authDb, projectsDb }
+const { authDb, projectsDb, resumeDb } = initDbs(firebaseApp)
+export { authDb, projectsDb, resumeDb }
 
 // Политика CORS
 fastify.addHook('onRequest', (request: FastifyRequest, reply :FastifyReply, done) => {
