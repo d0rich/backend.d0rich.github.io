@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import {Sequelize} from "sequelize"
 import * as config from '../config'
 
@@ -7,11 +6,6 @@ import * as projectsModels from "./projects";
 import * as firebase from "firebase-admin"
 
 export const initDbs = (firebaseApp: firebase.app.App) => {
-    // Подключение к mongodb
-    mongoose.connect(config.mongoDbUri, {useUnifiedTopology: true})
-        .then(() => console.log('MongoDB connected…'))
-        .catch(err => console.log(err))
-
     // Подключение к Postgres Auth
     const sequelizeAuth = new Sequelize(
         'd1aan3grkqof40',
