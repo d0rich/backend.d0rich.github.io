@@ -46,7 +46,7 @@ applyRoutes(fastify, dbx)
 // Прослушивание адреса
 const start = async () => {
     try {
-        await fastify.listen(process.env.PORT || 3000, process.env.LISTEN_ADDRESS || '0.0.0.0')
+        await fastify.listen(process.env.PORT || 3000, process.env.LISTEN_ADDRESS)
         //fastify.swagger()
     } catch (err) {
         fastify.log.error(err)
