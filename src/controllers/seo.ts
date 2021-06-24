@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
-import {authDb, projectsDb} from '../server'
+import {authDb, projectsDb, resumeDb} from '../server'
 import xmlbuilder from "xmlbuilder";
 
 export const generateSiteMap = () => {
@@ -56,8 +56,13 @@ export const generateSiteMap = () => {
             projects.forEach(project => {
                 addUrl(sitemap, `/portfolio/${project.stringId}`, 0.7 , project.updatedAt)
             })
-            addUrl(sitemap, '/about', 0.95, undefined, 'monthly')
-            addUrl(sitemap, '/about/resume', 0.5, undefined, 'monthly')
+            // addUrl(sitemap, '/about', 0.95, undefined, 'monthly')
+            const publicResume = await resumeDb.resume
+                .where('show', "==", true)
+                .get()
+            publicResume.docs.forEach(resume => {
+                addUrl(sitemap, `/about/resume/${resume.id}`, 0.3, undefined, 'monthly')
+            })
             rep.type('file/xml')
             return sitemap.end({pretty: true})
         } catch (err) {
