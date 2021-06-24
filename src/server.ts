@@ -3,6 +3,7 @@ import { Dropbox } from 'dropbox'
 import * as firebase from "firebase-admin"
 import { initDbs } from "./db"
 import * as config from './config'
+require('dotenv').config();
 
 // Инициализация fastify
 const fastify = createFastify({
@@ -45,7 +46,7 @@ applyRoutes(fastify, dbx)
 // Прослушивание адреса
 const start = async () => {
     try {
-        await fastify.listen(process.env.PORT || 3000, '0.0.0.0')
+        await fastify.listen(process.env.PORT || 3000, process.env.LISTEN_ADDRESS || '0.0.0.0')
         //fastify.swagger()
     } catch (err) {
         fastify.log.error(err)

@@ -38,10 +38,12 @@ export const initDbs = (firebaseApp: firebase.app.App) => {
 
     // Подключение к firestore
     const firestore = firebaseApp.firestore()
+    firestore.settings({
+        ignoreUndefinedProperties: true
+    })
     const resumeDb = {
         resume: firestore.collection('resume'),
-        images: firestore.collection('images'),
-        education: firestore.collection('education'),
+        timeNotes: firestore.collection('timeNotes'),
         skills: firestore.collection('skills'),
         social: firestore.collection('social')
     }

@@ -1,6 +1,7 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
 import { authDb } from '../server'
+require('dotenv').config();
 
 export const authorizeByPwd = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
@@ -75,20 +76,31 @@ export const unauthorize = () => {
 }
 
 export const methods = {
-    checkToken: async (req: FastifyRequest, rep: FastifyReply) => {
+    checkToken: async (req: FastifyRequest, rep: FastifyReply, sendReply:boolean = true) => {
+        if (!process.env.CHECK_TOKENS) return true
         const token = req.headers?.authorization
         if (!token) {
-            rep.code(401)
-            rep.send('No token')
+            if (sendReply){
+                rep.code(401)
+                rep.send('No token')
+            }
             return false
         }
-        const tokenInDb = await authDb.tokens.findByPk(token)
+        let tokenInDb
+        try {
+            tokenInDb = await authDb.tokens.findByPk(token)
+        }
+        catch (e){
+        }
         if (!tokenInDb || new Date(tokenInDb.expireAt) < new Date()){
-            await tokenInDb?.destroy()
-            rep.code(401)
-            rep.send('Unauthorised')
+            if (sendReply) {
+                await tokenInDb?.destroy()
+                rep.code(401)
+                rep.send('Unauthorised')
+            }
             return false
         }
+
         return true
     }
 }
