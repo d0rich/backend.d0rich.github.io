@@ -14,7 +14,7 @@ const fastify = createFastify({
 })
 // Регистрация middleware
 fastify.register(require('fastify-rate-limit'), {
-    max: 100,
+    max: 200,
     timeWindow: '1 minute'
 })
 
