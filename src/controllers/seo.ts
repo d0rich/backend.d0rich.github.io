@@ -69,6 +69,7 @@ export const generateSiteMap = () => {
                 addUrl(sitemap, `/about/resume/${resume.id}`, 0.3, undefined, 'monthly')
             })
             rep.type('text/xml')
+            rep.header('charset', 'UTF-8')
             return sitemap.end({pretty: true})
         } catch (err) {
             throw boomify(err)
