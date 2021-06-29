@@ -68,7 +68,7 @@ export const generateSiteMap = () => {
             publicResume.docs.forEach(resume => {
                 addUrl(sitemap, `/about/resume/${resume.id}`, 0.3, undefined, 'monthly')
             })
-            rep.type('text/xml')
+            rep.type('text/txt')
             return sitemap.end({pretty: true})
         } catch (err) {
             throw boomify(err)
