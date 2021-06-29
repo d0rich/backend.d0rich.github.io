@@ -5,5 +5,5 @@ import * as seoController from '../controllers/seo'
 
 
 export default function(fastify: FastifyInstance){
-    fastify.get('/seo/sitemap.xml', seoController.generateSiteMap())
+    fastify.get('/seo/sitemap.txt', seoController.generateSiteMap())
 }
