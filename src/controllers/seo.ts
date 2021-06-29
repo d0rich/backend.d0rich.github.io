@@ -42,6 +42,11 @@ export const generateSiteMap = () => {
                 }
                 url.ele('xhtml:link', {
                     rel: 'alternate',
+                    hreflang: 'ru',
+                    href: baseUrl + '/ru' + loc
+                })
+                url.ele('xhtml:link', {
+                    rel: 'alternate',
                     hreflang: 'en',
                     href: baseUrl + '/en' + loc
                 })
