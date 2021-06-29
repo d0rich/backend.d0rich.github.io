@@ -6,7 +6,7 @@ import xmlbuilder from "xmlbuilder";
 export const generateSiteMap = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            const baseUrl = 'https://d0rich.github.io/&num;'
+            const baseUrl = 'https://d0rich.github.io/#'
             const sitemap = xmlbuilder.create('urlset', {encoding: 'UTF-8', version: '1.0'})
                 .att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9')
                 .att('xmlns:xhtml', 'http://www.w3.org/1999/xhtml')
