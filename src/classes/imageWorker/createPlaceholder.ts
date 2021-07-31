@@ -25,16 +25,16 @@ export const createPlaceholder = async (filepath: string, dbx: Dropbox) => {
         // Генерируем вершины треугольников
         const basePoints = [];
 
-        for (let x = 0; x <= 100; x += 5) {
-            for (let y = 0; y <= 100; y += 5) {
+        for (let x = 0; x <= 100; x += 10) {
+            for (let y = 0; y <= 100; y += 10) {
                 const point = [x, y];
 
-                if ((x >= 5) && (x <= 95)) {
-                    point[0] += Math.floor(10 * Math.random() - 5);
+                if ((x >= 10) && (x <= 90)) {
+                    point[0] += Math.floor(20 * Math.random() - 10);
                 }
 
-                if ((y >= 5) && (y <= 95)) {
-                    point[1] += Math.floor(10 * Math.random() - 5);
+                if ((y >= 10) && (y <= 90)) {
+                    point[1] += Math.floor(20 * Math.random() - 10);
                 }
 
                 basePoints.push(point);
