@@ -20,3 +20,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+/.gcloudignore
+/app.yaml
+/bfg.jar
+GET_MODELS.txt
+/.env

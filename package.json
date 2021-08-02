@@ -1,5 +1,5 @@
 {
-  "name": "dorich-site-2.0-server",
+  "name": "dorich-services",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,13 +12,12 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "14.15.4"
+    "node": "14.x.x"
   },
   "dependencies": {
     "boom": "^7.3.0",
     "colorthief": "^2.3.2",
     "delaunay-triangulate": "^1.1.6",
-    "dotenv": "^10.0.0",
     "dropbox": "^9.0.0",
     "fastify": "^3.11.0",
     "fastify-rate-limit": "^5.5.0",
@@ -36,6 +35,7 @@
     "xmlbuilder": "^15.1.1"
   },
   "devDependencies": {
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.7",
     "sequelize-auto": "^0.8.3"
   }
