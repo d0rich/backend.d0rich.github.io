@@ -15,7 +15,7 @@ export const generateSiteMap = () => {
                             loc: String,
                             priority: Number | undefined = undefined,
                             lastmod: Date | undefined = undefined,
-                            changefreg: String | undefined = undefined) => {
+                            changefreq: String | undefined = undefined) => {
                 function formatDate(date) {
                     var d = new Date(date),
                         month = '' + (d.getMonth() + 1),
@@ -37,8 +37,8 @@ export const generateSiteMap = () => {
                 if (lastmod) {
                     url.ele('lastmod', {}, formatDate(lastmod))
                 }
-                if (changefreg) {
-                    url.ele('changefreg', {}, changefreg)
+                if (changefreq) {
+                    url.ele('changefreq', {}, changefreq)
                 }
                 url.ele('xhtml:link', {
                     rel: 'alternate',
