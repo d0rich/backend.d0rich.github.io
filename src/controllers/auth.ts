@@ -7,7 +7,6 @@ export const authorizeByPwd = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
             const authData: any = req.body
-            console.log(authData)
             const userToAuth = await authDb.users.findOne({where: { login: authData?.login }})
             if (!userToAuth) {
                 rep.code(404)
@@ -60,7 +59,6 @@ export const authorizeByToken = () => {
 export const unauthorize = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            console.log(req.body)
             const authData: any = req.body
             const tokenInDb = await authDb.tokens.findByPk(authData?.token)
             if (!tokenInDb) {

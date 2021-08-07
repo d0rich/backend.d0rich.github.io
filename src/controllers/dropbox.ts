@@ -35,29 +35,11 @@ export const generatePlaceholder = (dbx: Dropbox) => {
     }
 }
 
-export const getImageLinks = (dbx: Dropbox) => {
-    return async (req: FastifyRequest, rep: FastifyReply) => {
-        try {
-            return await methods.getImgLinks(req.query['path'], dbx)
-        } catch (err){
-            throw boomify(err)
-        }
-    }
-}
-
 export const methods = {
     async getImgLinks(path: string, dbx: Dropbox){
-        const imgPair = await authDb.imgPairs.findByPk(path)
-        let phImg = ''
-        if (!imgPair){
-            phImg = path.split('.')[0] + `.svg`
-            const svg = await createPlaceholder(path, dbx)
-            await dbx.filesUpload({path: phImg, contents: svg})
-            await authDb.imgPairs.create({ originalPath: path, placeholderPath: phImg })
-        }
-        else {
-            phImg = imgPair['placeholderPath']
-        }
+        const phImg = path.split('.')[0] + `.svg`
+        const svg = await createPlaceholder(path, dbx)
+        await dbx.filesUpload({path: phImg, contents: svg})
         const phImgSrc = await dbx.sharingCreateSharedLink({path: phImg })
         const mainImgSrc = await dbx.sharingCreateSharedLink({path: path })
 

@@ -45,7 +45,6 @@ export const getProjects = () => {
                     return 0
                 })
             })
-            console.log(projects)
             return {
                 pages: Math.ceil(count / projectsOnPage),
                 count: count,
@@ -232,7 +231,6 @@ export const createOrEditProject = (dbx: Dropbox) => {
 }
 
 const setTagsAndTechs = async (project: projects, req: FastifyRequest) => {
-    console.log(project)
     await project.setTagId_tags( req.body['tags'] )
     const editTechnologiesPromises = []
     req.body['technologies'].forEach(tech => {
@@ -258,7 +256,6 @@ export const deleteProject = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         if (await authController.methods.checkToken(req, rep))
             try {
-                console.log(req.body)
                 return await projectsDb.projects.destroy(
                     {
                         where: {

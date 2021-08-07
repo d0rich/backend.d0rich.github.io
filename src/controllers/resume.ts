@@ -284,7 +284,6 @@ export const setTimeNote = () => {
         if (await auth.methods.checkToken(req, rep))
             try {
                 const timeNote: any = req.body
-                console.log(timeNote)
                 return await resumeDb.timeNotes
                     .doc(timeNote['id'])
                     .set({
