@@ -5,50 +5,24 @@ import * as authController from "./auth";
 import {projectsDb, newsDb} from '../server'
 import {Dropbox} from "dropbox";
 const { convert } = require('html-to-text');
-import {fn, Op, literal} from "sequelize";
 
 export const getNewsFeed = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            const projectsOnPage: number = + req.query['onPage'] || 6
+            const newsOnPage: number = + req.query['onPage'] || 10
             const pageNumber: number = + req.query['page'] || 1
-            let tags: number[] = req.query['tags']
-                ?.split(',')
-                .map(id => +id)
-                .filter(id => id !== 0) || []
-            let where = null
-            if (tags.length > 0){
-                const tags_projects = await projectsDb.projects_tags.findAll({
-                    attributes: ['projectId'],
-                    where: { tagId: tags.length === 0 ? {[Op.ne] : null} : { [Op.in]: tags } }
-                })
-                const projectIds = Array.from(new Set( tags_projects.map(tp => tp.projectId) ))
-                where = { id: { [Op.in]: projectIds }}
-            }
-
-            let projects = await projectsDb.projects.findAll( {
-                order: [['date', 'DESC']],
-                limit: projectsOnPage,
-                offset: projectsOnPage * (pageNumber - 1),
-                attributes: ['id', 'stringId', 'title', 'date', 'imgUrl'],
-                where,
-                include: [
-                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } }
-                ]
+            let news = await newsDb.news.findAll( {
+                order: [['createdAt', 'DESC']],
+                limit: newsOnPage,
+                offset: newsOnPage * (pageNumber - 1),
+                attributes: ['id', 'stringId', 'title', 'contentShort', 'image', 'createdAt'],
             })
-            let count = await projectsDb.projects.count( { attributes: [], where })
-
-            projects.forEach(pr => {
-                pr.tagId_tags.sort((a, b) => {
-                    if (a.text < b.text) return -1
-                    if (a.text > b.text) return 1
-                    return 0
-                })
-            })
+            let count = await newsDb.news.count( { attributes: [] })
             return {
-                pages: Math.ceil(count / projectsOnPage),
+                pages: Math.ceil(count / newsOnPage),
                 count: count,
-                projects: projects}
+                news: news
+            }
         } catch (err) {
             throw boomify(err)
         }
@@ -58,30 +32,12 @@ export const getNewsFeed = () => {
 export const getNews = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            const  project = await projectsDb.projects.findOne( {
+            const news = await newsDb.news.findOne( {
                 where: {
                     stringId: req.params['stringId']
-                },
-                include: [
-                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } },
-                    {
-                        model: projectsDb.technologies,
-                        as: 'technologyId_technologies',
-                        through: { attributes: ['version'] }
-                    }
-                ]
+                }
             })
-            project.tagId_tags.sort((a, b) => {
-                if (a.text < b.text) return -1
-                if (a.text > b.text) return 1
-                return 0
-            })
-            project.technologyId_technologies.sort((a, b) => {
-                if (a.name < b.name) return -1
-                if (a.name > b.name) return 1
-                return 0
-            })
-            return project
+            return news
         } catch (err) {
             throw boomify(err)
         }
@@ -91,18 +47,10 @@ export const getNews = () => {
 export const getNewsById = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            return await projectsDb.projects.findOne( {
+            return await newsDb.news.findOne( {
                 where: {
-                    id: req.params['projectId']
-                },
-                include: [
-                    { model: projectsDb.tags, as: 'tagId_tags', through: { attributes: [] } },
-                    {
-                        model: projectsDb.technologies,
-                        as: 'technologyId_technologies',
-                        through: { attributes: ['version'] }
-                    }
-                ]
+                    id: req.params['newsId']
+                }
             })
         } catch (err) {
             throw boomify(err)
@@ -113,7 +61,7 @@ export const getNewsById = () => {
 export const checkNewsStringId = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         try {
-            return await projectsDb.projects.findOne(
+            return await newsDb.news.findOne(
                 {
                     where: { stringId: req.params['stringId'] },
                     attributes: ['id']
@@ -165,7 +113,7 @@ export const deleteNews = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
         if (await authController.methods.checkToken(req, rep))
             try {
-                return await projectsDb.projects.destroy(
+                return await newsDb.news.destroy(
                     {
                         where: {
                             stringId: req.body['stringId'],
