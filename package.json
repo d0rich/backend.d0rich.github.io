@@ -31,10 +31,10 @@
     "sequelize": "^6.6.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
-    "xmlbuilder": "^15.1.1"
+    "xmlbuilder": "^15.1.1",
+    "dotenv": "^10.0.0"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0",
     "nodemon": "^2.0.7",
     "sequelize-auto": "^0.8.3"
   },

@@ -3,7 +3,11 @@ import { Dropbox } from 'dropbox'
 import * as firebase from "firebase-admin"
 import { initDbs } from "./db"
 import * as config from './config'
-require('dotenv').config();
+try{
+    require('dotenv').config();
+}
+catch (e) {
+}
 
 // Инициализация fastify
 const fastify = createFastify({

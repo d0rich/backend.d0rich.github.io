@@ -1,7 +1,11 @@
 import {FastifyReply, FastifyRequest} from "fastify"
 import {boomify} from 'boom'
 import { authDb } from '../server'
-require('dotenv').config();
+try{
+    require('dotenv').config();
+}
+catch (e) {
+}
 
 export const authorizeByPwd = () => {
     return async (req: FastifyRequest, rep: FastifyReply) => {
