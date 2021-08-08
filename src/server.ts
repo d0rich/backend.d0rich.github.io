@@ -28,8 +28,8 @@ const firebaseApp = firebase.initializeApp({
 })
 
 // Подключение к базам данных
-const { authDb, projectsDb, resumeDb } = initDbs(firebaseApp)
-export { authDb, projectsDb, resumeDb }
+const { authDb, projectsDb, newsDb, resumeDb } = initDbs(firebaseApp)
+export { authDb, projectsDb, newsDb, resumeDb }
 
 // Политика CORS
 fastify.addHook('onRequest', (request: FastifyRequest, reply :FastifyReply, done) => {

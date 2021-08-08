@@ -5,6 +5,7 @@ import applyResumeRoutes from './resume'
 import applyDropboxRoutes from './dropbox'
 import applyAuthRoutes from './auth'
 import applyProjectsRoutes from './projects'
+import applyNewsRoutes from './news'
 import applySEOController from './seo'
 
 export default function (fastify: FastifyInstance, dbx: Dropbox){
@@ -21,5 +22,6 @@ export default function (fastify: FastifyInstance, dbx: Dropbox){
     applyDropboxRoutes(fastify, dbx)
     applyAuthRoutes(fastify)
     applyProjectsRoutes(fastify, dbx)
+    applyNewsRoutes(fastify, dbx)
     applySEOController(fastify)
 }

@@ -24,6 +24,7 @@
     "firebase-admin": "^9.9.0",
     "get-pixels": "^3.3.2",
     "handlebars": "^4.7.7",
+    "html-to-text": "^8.0.0",
     "image-size": "^0.9.3",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
