@@ -1,6 +1,6 @@
 {
   "logging": false,
-  "host": "34.88.1.21",
+  "host": "ec2-34-250-19-18.eu-west-1.compute.amazonaws.com",
   "dialect": "postgres",
   "protocol": "postgres",
   "dialectOptions": {

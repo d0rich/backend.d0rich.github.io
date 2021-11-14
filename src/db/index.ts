@@ -9,9 +9,9 @@ import * as firebase from "firebase-admin"
 export const initDbs = (firebaseApp: firebase.app.App) => {
     // Подключение к Postgres Auth
     const sequelizeAuth = new Sequelize(
-        'auth',
-        process.env.DB_USER,
-        process.env.DB_PWD,
+        'd1rrban262o6t',
+        process.env.DB_USER_AUTH,
+        process.env.DB_PWD_AUTH,
         require('./seq-options.json'))
 
     const authDb = authModels.initModels(sequelizeAuth)
@@ -24,9 +24,9 @@ export const initDbs = (firebaseApp: firebase.app.App) => {
 
     // Подключение к Postgres Projects
     const sequelizeProjects = new Sequelize(
-        'projects',
-        process.env.DB_USER,
-        process.env.DB_PWD,
+        'd2u6a9g2tijuvu',
+        process.env.DB_USER_PROJECTS,
+        process.env.DB_PWD_PROJECTS,
         require('./seq-options.json'))
 
    const projectsDb = projectsModels.initModels(sequelizeProjects)
@@ -39,9 +39,9 @@ export const initDbs = (firebaseApp: firebase.app.App) => {
 
     // Подключение к Postgres News
     const sequelizeNews = new Sequelize(
-        'news',
-        process.env.DB_USER,
-        process.env.DB_PWD,
+        'dbk8p3pu57ng98',
+        process.env.DB_USER_NEWS,
+        process.env.DB_PWD_NEWS,
         require('./seq-options.json'))
 
     const newsDb = newsModels.initModels(sequelizeNews)
