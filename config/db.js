@@ -1,3 +1,3 @@
-module.exports = {         
-    url : 'mongodb+srv://admin:1q2w3easd@honeyspacedb-1mjgo.mongodb.net/test?retryWrites=true&w=majority'
-  };
+module.exports = {
+    url: 'mongodb+srv://Guest:12345@dorichprodsite-0fz1i.gcp.mongodb.net/test?retryWrites=true&w=majority'
+};
